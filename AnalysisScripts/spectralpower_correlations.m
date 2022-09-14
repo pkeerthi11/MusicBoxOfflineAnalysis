@@ -3,10 +3,10 @@ clc;
 
 %Change directory to match where appropriate functions are saved
 addpath('..\AnalysisFunctions\');
-addpath(genpath('..\ssvep_musicbox\'));
+addpath(genpath('..\..\ssvep_musicbox\'));
 
 %Change directory of filelisting to appropriate subject
-fileListing = dir('..\als_participantdata');
+fileListing = dir('..\..\NHL');
 filterCutoffs = [5, 50];
 samplingRate = 256; %samplingRate
 percGoodBadTrials = 1; %The percentage of good and bad trials to select (if =1, selects all trials)
@@ -30,7 +30,7 @@ trial_time = [trial_time, trial_time_ISI];
 
 [segments, segment_states, best_i, best_j, worst_i, worst_j] = ...
     segment_bestworst_trials(fileListing, filterCutoffs, samplingRate, ...
-    percGoodBadTrials, channels, analysis_code, best_trials);
+    percGoodBadTrials, channels, analysis_code, target_freq, best_trials);
 
 cutoffs  = [1,8; 8, 12; 40, 100];
 
@@ -48,7 +48,7 @@ for i=1:numel(segments)
     [mCC_diff, mCC_diff_ratio, r_tstim, r_tISI, canon_corr_stim, canon_corr_ISI] = calc_CCA_change(trial, trial_states, ...
         pad_before, trial_time, samplingRate, windowLengthCCA, overlapCCA, channels, target_freq, harmonics);
 
-    mCC_diff_ratios(i) = mCC_diff_ratio;
+    mCC_diff_ratios(i) = mCC_diff;
 
 end
 
@@ -57,20 +57,20 @@ figure;
 subplot(3,1,1);
 scatter(relative_powers_alltrials(:,1), mCC_diff_ratios);
 hold on;
-xlabel('Change in Relative Power Between SFI and ISI in the 1-8Hz Band');
+xlabel('Relative Power in the 1-8Hz Band');
 ylabel('CCA Ratio');
 hold off;
 
 subplot(3,1,2);
 scatter(relative_powers_alltrials(:,2), mCC_diff_ratios);
 hold on;
-xlabel('Change in Relative Power Between SFI and ISI in the 8-12Hz Band');
+xlabel('Relative Power in the 8-12Hz Band');
 ylabel('CCA Ratio');
 hold off;
 
 subplot(3,1,3);
 scatter(relative_powers_alltrials(:,3), mCC_diff_ratios);
 hold on;
-xlabel('Change in Relative Power Between SFI and ISI in the 40-100Hz Band');
+xlabel('Relative Power in the 40-100Hz Band');
 ylabel('CCA Ratio');
 hold off;
